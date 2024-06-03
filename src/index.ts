@@ -1,6 +1,6 @@
-export type MatchRoleType = "input" | "fuzzy" | "suggestion";
+type MatchRoleType = "input" | "fuzzy" | "suggestion";
 
-export type FuzzyMatchPart = {
+type FuzzyMatchPart = {
     content: string;
     type: MatchRoleType;
 };
