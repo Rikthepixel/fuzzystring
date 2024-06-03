@@ -1,11 +1,12 @@
 {
   "name": "@rikthepixel/fuzzystring",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "test": "jest",
     "format": "prettier --write .",
-    "build": "tsup"
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "lib",
@@ -13,9 +14,9 @@
     "README.md"
   ],
   "sideEffects": false,
-  "main": "dist/index.js",
-  "module": "dist/index.cjs",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -23,6 +24,9 @@
       "require": "./lib/index.js",
       "types": "./lib//index.d.ts"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
