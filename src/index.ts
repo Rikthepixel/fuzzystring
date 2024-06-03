@@ -1,14 +1,9 @@
 export type MatchRoleType = "input" | "fuzzy" | "suggestion";
 
-export interface FuzzyMatchPart {
+export type FuzzyMatchPart = {
     content: string;
     type: MatchRoleType;
-}
-
-export interface FuzzyMatchData {
-    parts: FuzzyMatchPart[];
-    score: number;
-}
+};
 
 export interface FuzzyMatchOptions {
     truncateTooLongInput?: boolean;
@@ -31,33 +26,35 @@ function calculateFuzzyMatchPartsScore(fuzzyMatchParts: FuzzyMatchPart[]) {
 }
 
 function compareLetters(a: string, b: string, isCaseSensitive = false) {
-    if (isCaseSensitive) {
-        return a === b;
-    }
+    if (isCaseSensitive) return a === b;
     return a.toLowerCase() === b.toLowerCase();
 }
 
+/**
+ * Fuzzy matches a `input` string with a `searchValue`.
+ *
+ * @returns `number` a score representing how similar the search value is to the input string 
+ */
 export function fuzzyString(
     input: string,
-    stringToBeFound: string,
-    { truncateTooLongInput, isCaseSesitive }: FuzzyMatchOptions = {},
-): FuzzyMatchData | false {
+    searchValue: string,
+    opts: FuzzyMatchOptions = { },
+): number {
+    const { truncateTooLongInput, isCaseSesitive } = opts;
+
     // if input is longer than string to find, and we dont truncate it - it's incorrect
-    if (input.length > stringToBeFound.length && !truncateTooLongInput) {
-        return false;
+    if (input.length > searchValue.length && !truncateTooLongInput) {
+        return 0;
     }
 
     // if truncate is enabled - do it
-    if (input.length > stringToBeFound.length && truncateTooLongInput) {
-        input = input.substring(0, stringToBeFound.length);
+    if (input.length > searchValue.length && truncateTooLongInput) {
+        input = input.substring(0, searchValue.length);
     }
 
     // if input is the same as string to be found - we dont need to look for fuzzy match - return it as match
-    if (input === stringToBeFound) {
-        return {
-            parts: [{ content: input, type: "input" }],
-            score: 1,
-        };
+    if (input === searchValue) {
+        return 1;
     }
 
     const matchParts: FuzzyMatchPart[] = [];
@@ -91,7 +88,7 @@ export function fuzzyString(
         }
     }
 
-    for (let anotherStringToBeFoundLetter of stringToBeFound) {
+    for (let anotherStringToBeFoundLetter of searchValue) {
         const inputLetterToMatch = remainingInputLetters[0];
 
         // no more input - finish fuzzy matching
@@ -129,23 +126,19 @@ export function fuzzyString(
 
     // if we still have letters left in input - means not all input was included in string to find - input was incorrect
     if (remainingInputLetters.length > 0) {
-        return false;
+        return 0;
     }
 
     // lets get entire matched part (from start to last letter of input)
     const matchedPart = matchParts.map((match) => match.content).join("");
 
     // get remaining part of string to be found
-    const suggestionPart = stringToBeFound.replace(matchedPart, "");
+    const suggestionPart = searchValue.replace(matchedPart, "");
 
     // if we have remaining part - add it as suggestion
     if (suggestionPart) {
         matchParts.push({ content: suggestionPart, type: "suggestion" });
     }
-    const score = calculateFuzzyMatchPartsScore(matchParts);
 
-    return {
-        score,
-        parts: matchParts,
-    };
+    return calculateFuzzyMatchPartsScore(matchParts);
 }
