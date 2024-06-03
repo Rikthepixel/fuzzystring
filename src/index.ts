@@ -33,7 +33,7 @@ function compareLetters(a: string, b: string, isCaseSensitive = false) {
 /**
  * Fuzzy matches a `input` string with a `searchValue`.
  *
- * @returns `number` a score representing how similar the search value is to the input string 
+ * @returns `number` a score (from 0 to 1) representing how similar the search value is to the input string.
  */
 export function fuzzyString(
     input: string,
