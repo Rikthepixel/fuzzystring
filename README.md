@@ -12,13 +12,11 @@ Alows partial matching of requested string. Useful for searching large sets of d
 
 ## Install
 
-`yarn add fuzzystring`
+- Using npm: `npm add fuzzystring`
+- Using yarn: `yarn add fuzzystring`
 
 ```ts
 import { fuzzyString } from 'fuzzystring';
-
-// or if you prefer default 🤮exports
-import fuzzyString from 'fuzzystring';
 ```
 
 ## Api
