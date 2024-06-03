@@ -23,24 +23,12 @@ import { fuzzyString } from 'fuzzystring';
 
 ```ts
 fuzzyString('liolor', 'lorem ipsum dolor sit');
-
-// returns
-{
-  parts: [
-    { content: 'l', type: 'input' },
-    { content: 'orem ', type: 'fuzzy' },
-    { content: 'i', type: 'input' },
-    { content: 'psum d', type: 'fuzzy' },
-    { content: 'olor', type: 'input' },
-    { content: ' sit', type: 'suggestion' },
-  ],
-  score: 0.87,
-}
+// Outputs: 0.87
 ```
 
 ## Performance
 
-```js
+```ts
 console.time('measure');
 for (let i = 0; i < 100000; i++) {
   fuzzyString(`ive ${i} lles`, `i have ${i} apples`);
@@ -55,15 +43,8 @@ console.timeEnd('measure');
 
 Test
 
-`yarn test`
+`npm run test`
 
 Build
 
-`yarn build`
-
-## Toodo
-
-- [x] Demo page
-- [ ] Solid performance test
-- [ ] Memoized cache for the same inputs
-- [ ] CI test cov etc
+`npm run build`

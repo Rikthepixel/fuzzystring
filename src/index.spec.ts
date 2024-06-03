@@ -1,9 +1,9 @@
-import { fuzzyString, FuzzyMatchOptions } from './index';
+import { fuzzyMatch, FuzzyMatchOptions } from './index';
 
 const fullPattern = 'lorem ipsum dolor';
 
 function resultsFor(input: string, options?: FuzzyMatchOptions) {
-  const match = fuzzyString(input, fullPattern, options);
+  const match = fuzzyMatch(input, fullPattern, options);
 
   if (!match) {
     return null;

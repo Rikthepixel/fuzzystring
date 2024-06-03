@@ -12,8 +12,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
     "isolatedModules": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true

@@ -35,11 +35,7 @@ function compareLetters(a: string, b: string, isCaseSensitive = false) {
  *
  * @returns `number` a score (from 0 to 1) representing how similar the search value is to the input string.
  */
-export function fuzzyString(
-    input: string,
-    searchValue: string,
-    opts: FuzzyMatchOptions = { },
-): number {
+export function fuzzyMatch(input: string, searchValue: string, opts: FuzzyMatchOptions = {}): number {
     const { truncateTooLongInput, isCaseSesitive } = opts;
 
     // if input is longer than string to find, and we dont truncate it - it's incorrect
@@ -58,8 +54,7 @@ export function fuzzyString(
     }
 
     const matchParts: FuzzyMatchPart[] = [];
-
-    const remainingInputLetters = input.split("");
+    const remainingInputChars = input.split("");
 
     // let's create letters buffers
     // it's because we'll perform matching letter by letter, but if we have few letters matching or not matching in the row
@@ -88,20 +83,20 @@ export function fuzzyString(
         }
     }
 
-    for (let anotherStringToBeFoundLetter of searchValue) {
-        const inputLetterToMatch = remainingInputLetters[0];
+    for (let searchChar of searchValue) {
+        const inputChar = remainingInputChars[0];
 
         // no more input - finish fuzzy matching
-        if (!inputLetterToMatch) {
+        if (inputChar === undefined) {
             break;
         }
 
-        const isMatching = compareLetters(anotherStringToBeFoundLetter, inputLetterToMatch, isCaseSesitive);
+        const isMatching = compareLetters(searchChar, inputChar, isCaseSesitive);
 
         // if input letter doesnt match - we'll go to the next letter to try again
         if (!isMatching) {
             // add this letter to buffer of ommited letters
-            ommitedLettersBuffer.push(anotherStringToBeFoundLetter);
+            ommitedLettersBuffer.push(searchChar);
             // in case we had something in matched letters buffer - clear it as matching letters run ended
             addMatchedLettersAsInput();
             // go to the next input letter
@@ -111,21 +106,21 @@ export function fuzzyString(
         // we have input letter matching!
 
         // remove it from remaining input letters
-        remainingInputLetters.shift();
+        remainingInputChars.shift();
 
         // add it to matched letters buffer
-        matchedLettersBuffer.push(anotherStringToBeFoundLetter);
+        matchedLettersBuffer.push(searchChar);
         // in case we had something in ommited letters buffer - add it to the match now
         addOmmitedLettersAsFuzzy();
 
         // if there is no more letters in input - add this matched letter to match too
-        if (!remainingInputLetters.length) {
+        if (!remainingInputChars.length) {
             addMatchedLettersAsInput();
         }
     }
 
     // if we still have letters left in input - means not all input was included in string to find - input was incorrect
-    if (remainingInputLetters.length > 0) {
+    if (remainingInputChars.length > 0) {
         return 0;
     }
 
